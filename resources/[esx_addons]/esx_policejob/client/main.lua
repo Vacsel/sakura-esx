@@ -28,11 +28,13 @@ local playerInService = false
 local spawnedVehicles, isInShopMenu = {}, false
 local Drag = false
 local animation = false
+-- vacsel/sakura-esx/sakura-esx-5ead2099c5530d4eaae9c9fbf5c973346d63869d/resources/[esx_addons]/esx_policejob/client/main.lua
 local function ForceLeaveRadio()
     pcall(function()
         if exports['pma-voice'] then
             exports['pma-voice']:setPlayerRadio(0)
             exports['pma-voice']:setVoiceProperty('radioEnabled', false)
+            exports['pma-voice']:addRadioDisableBit(1)
         end
     end)
 end
@@ -40,6 +42,7 @@ end
 local function RestoreRadio()
     pcall(function()
         if exports['pma-voice'] then
+            exports['pma-voice']:removeRadioDisableBit(1)
             exports['pma-voice']:setVoiceProperty('radioEnabled', true)
         end
     end)
