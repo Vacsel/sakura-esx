@@ -1,0 +1,2 @@
+ALTER TABLE `owned_vehicles` ADD COLUMN IF NOT EXISTS `name` VARCHAR(50) COLLATE utf8mb4_general_ci;
+ALTER TABLE `owned_vehicles` ADD COLUMN IF NOT EXISTS `target` VARCHAR(50) COLLATE utf8mb4_general_ci;

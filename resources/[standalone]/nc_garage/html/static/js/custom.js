@@ -1,0 +1,2 @@
+// Scripting by NC Developer (https://nc-developer.com)
+
