@@ -1003,3 +1003,27 @@ function Openradio(src, args, raw)
     --     Radio:Toggle(false)
     end            
 end
+
+
+-- Disable radio while handcuffed
+local wasCuffed = false
+Citizen.CreateThread(function()
+    while true do
+        local cuffed = exports["esx_policejob"]:handcuff()
+        if cuffed and not wasCuffed then
+            wasCuffed = true
+            if Radio.Open or Radio.On then
+                Radio:Toggle(false)
+                Radio.On = false
+                Radio:Remove()
+                radiochannel = 0
+                exports["pma-voice"]:setVoiceProperty("radioEnabled", false)
+            end
+            SetRadioEnabled(false)
+        elseif not cuffed and wasCuffed then
+            wasCuffed = false
+            SetRadioEnabled(true)
+        end
+        Citizen.Wait(1000)
+    end
+end)
