@@ -28,6 +28,23 @@ local playerInService = false
 local spawnedVehicles, isInShopMenu = {}, false
 local Drag = false
 local animation = false
+local function ForceLeaveRadio()
+    pcall(function()
+        if exports['pma-voice'] then
+            exports['pma-voice']:setPlayerRadio(0)
+            exports['pma-voice']:setVoiceProperty('radioEnabled', false)
+        end
+    end)
+end
+
+local function RestoreRadio()
+    pcall(function()
+        if exports['pma-voice'] then
+            exports['pma-voice']:setVoiceProperty('radioEnabled', true)
+        end
+    end)
+end
+
 ESX                           = nil
 
 Citizen.CreateThread(function()
@@ -2335,31 +2352,33 @@ AddEventHandler('esx_policejob:handcuffItem', function()
 	local playerPed = PlayerPedId()
 	--oldDimention = exports['Black_Multiverse']:GetDimention()
 	Citizen.CreateThread(function()
-		if IsHandcuffed then
-			pcall(function() exports.nc_inventory:BlockKey({ 'F2', 'T', 'G', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, false) end)
-			if Config.EnableHandcuffTimer and HandcuffTimer.Active then
-				ESX.ClearTimeout(HandcuffTimer.Task)
-			end
+                if IsHandcuffed then
+                        pcall(function() exports.nc_inventory:BlockKey({ 'F2', 'T', 'G', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, false) end)
+                        if Config.EnableHandcuffTimer and HandcuffTimer.Active then
+                                ESX.ClearTimeout(HandcuffTimer.Task)
+                        end
 
-			ClearPedSecondaryTask(playerPed)
-			SetEnableHandcuffs(playerPed, false)
-			DisablePlayerFiring(playerPed, false)
-			SetPedCanPlayGestureAnims(playerPed, true)
-			IsHandcuffed = false
-		end
-	end)
+                        RestoreRadio()
+                        ClearPedSecondaryTask(playerPed)
+                        SetEnableHandcuffs(playerPed, false)
+                        DisablePlayerFiring(playerPed, false)
+                        SetPedCanPlayGestureAnims(playerPed, true)
+                        IsHandcuffed = false
+                end
+        end)
 end)
 oldDimention = 0
 RegisterNetEvent('esx_policejob:handcuff')
 AddEventHandler('esx_policejob:handcuff', function()
-	IsHandcuffed    = not IsHandcuffed
-	local playerPed = PlayerPedId()
-	--oldDimention = exports['Black_Multiverse']:GetDimention()
-	Citizen.CreateThread(function()
-		
-		if IsHandcuffed then
-			
-			pcall(function() exports.nc_inventory:BlockKey({ 'F2', 'T', 'G', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, true) end)
+        IsHandcuffed    = not IsHandcuffed
+        local playerPed = PlayerPedId()
+        --oldDimention = exports['Black_Multiverse']:GetDimention()
+        Citizen.CreateThread(function()
+
+                if IsHandcuffed then
+                ForceLeaveRadio()
+
+            pcall(function() exports.nc_inventory:BlockKey({ 'F2', 'T', 'G', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, true) end)
 			SetEnableHandcuffs(playerPed, true)
 			DisablePlayerFiring(playerPed, true)
 			SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
@@ -2376,8 +2395,9 @@ AddEventHandler('esx_policejob:handcuff', function()
 				StartHandcuffTimer()
 			end
 
-		else
-			pcall(function() exports.nc_inventory:BlockKey({ 'F2', 'T', 'G', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, false) end)
+        	else
+            RestoreRadio()
+            pcall(function() exports.nc_inventory:BlockKey({ 'F2', 'T', 'G', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, false) end)
 			if Config.EnableHandcuffTimer and HandcuffTimer.Active then
 				ESX.ClearTimeout(HandcuffTimer.Task)
 			end
@@ -2395,10 +2415,11 @@ end)
 RegisterNetEvent('esx_policejob:unrestrain')
 AddEventHandler('esx_policejob:unrestrain', function()
 	print("handcuff working")
-	if IsHandcuffed then
-		local playerPed = PlayerPedId()
-		IsHandcuffed = false
-		pcall(function() exports.nc_inventory:BlockKey({ 'F2', 'T', 'G', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, false) end)
+        if IsHandcuffed then
+                local playerPed = PlayerPedId()
+                IsHandcuffed = false
+                RestoreRadio()
+        pcall(function() exports.nc_inventory:BlockKey({ 'F2', 'T', 'G', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, false) end)
 		ClearPedSecondaryTask(playerPed)
 		SetEnableHandcuffs(playerPed, false)
 		DisablePlayerFiring(playerPed, false)
