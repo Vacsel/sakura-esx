@@ -12,6 +12,7 @@ AddEventHandler('esx_ambulancejob:revive', function(target)
 		-- xPlayer.addMoney(Config.ReviveReward)
 		TriggerClientEvent('esx_ambulancejob:reviveclear', target)
 		xPlayer.addInventoryItem('medic_ticket', 1)
+		xPlayer.addInventoryItem('card_revive', 1)
 		local targetXPlayer = ESX.GetPlayerFromId(target)
 
 		local sendToDiscord = ''	.. xPlayer.name .. ' ชุบชีวิต ' .. targetXPlayer.name .. ' ได้รับ $' .. ESX.Math.GroupDigits(Config.ReviveReward) .. ''
@@ -40,6 +41,7 @@ AddEventHandler('esx_ambulancejob:reviveallcooldown', function(alltarget)
 		end
 		TriggerClientEvent('esx_ambulancejob:cl:allplayercooldown', -1, alltarget)
 		xPlayer.addInventoryItem('medic_ticket', tonumber(#playerall))
+		xPlayer.addInventoryItem('card_revive', tonumber(#playerall))
 		xPlayer.removeInventoryItem('medikit', tonumber(#playerall))
 
 		local sendToDiscord = ''	.. xPlayer.name .. ' ชุบชีวิตทั้งหมด ' .. tonumber(#playerall) .. ' คน '
@@ -59,6 +61,7 @@ AddEventHandler('esx_ambulancejob:reviveall', function(alltarget)
 		end
 		
 		xPlayer.addInventoryItem('medic_ticket', tonumber(#playerall))
+		xPlayer.addInventoryItem('card_revive', tonumber(#playerall))
 		xPlayer.removeInventoryItem('medikit', tonumber(#playerall))
 
 		local sendToDiscord = ''	.. xPlayer.name .. ' ชุบชีวิตทั้งหมด ' .. tonumber(#playerall) .. ' คน '
