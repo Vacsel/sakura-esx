@@ -1,0 +1,273 @@
+<!-- Scripting by NC Developer (https://nc-developer.com) -->
+
+<!DOCTYPE html>
+<html lang="en" id="html">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="สคริปต์โดย NC Developer สามารถติดต่อซื้อสคริปต์ได้ที่ https://fivem.nc-developer.com/"
+    />
+    <title>Script by NC Developer</title>
+    <script src="https://cdn.jsdelivr.net/npm/motion@latest/dist/motion.js"></script>
+    <link rel="stylesheet" href="https://poseidon-code.github.io/supacons/dist/supacons.all.css" />
+    <link rel="stylesheet" href="./css/nc.css" />
+    <link rel="stylesheet" href="./css/custom.css" />
+    <link rel="stylesheet" href="./css/jquery-ui.min.css" />
+  </head>
+  <body>
+    <div id="nc-wrapper" class="preparing" style="opacity: 0">
+      <div id="nc-logo" class="hide" data-tilt></div>
+      <div id="nc-trash">
+        <div class="icon">
+          <iconify-icon icon="ion:trash-outline"></iconify-icon>
+        </div>
+        <div class="trash"></div>
+      </div>
+      <div id="nc-shortcuts" class="nc-shortcuts fake">
+        <div class="nc-shortcuts-tab fake"></div>
+      </div>
+      <div id="nc-shortcuts" class="nc-shortcuts real">
+        <div class="nc-shortcuts-tab"></div>
+      </div>
+      <div id="nc-inventory">
+        <div id="nc-inventory-header">
+          <div class="nc_navbar_main">
+            <div class="nc-filter-choices">
+                <div class="nc-filter-indicator">
+                    <div class="nc-indicator"></div>
+                </div>
+            </div>
+          </div>
+          <div class="nc-title">
+              <!-- <div class="nc-search">
+                  <div class="nc-search-box">
+                      <div class="nc-search-icon">
+                          <iconify-icon icon="ion:search-sharp"></iconify-icon>
+                      </div>
+                      <input
+                      type="text"
+                      id="search"
+                      value=""
+                      maxlength="50"
+                      tabindex="-1"
+                      />
+                  </div>
+              </div> -->
+              <p>ช่องเก็บของ <i class="fa-solid fa-suitcase" style="margin-left: 0.1vw; color: #FFF;"></i></p>
+          </div>
+        </div>
+        <div id="nc-inventory-content">
+          <div class="nc-main">
+            <div class="nc-primary inventory">
+              <div class="nc-items" tabindex="-1"></div>
+            </div>
+            <div class="skin-menu" :class="{ show: isOpen }">
+              <motion.div class="skin-header"
+                    :initial="{ opacity: 0, y: -20 }"
+                    :animate="{ 
+                      opacity: 1, 
+                      y: 0,
+                      transition: { 
+                        duration: 0.3,
+                        ease: [0.25, 0.46, 0.45, 0.94]
+                      }
+                    }"
+                >
+                    <p>Weapon Skins</p>
+                    <small>ระบบเปลี่ยนสกินอาวุธ</small>
+                    <motion.button 
+                        class="close-btn" 
+                        @click="closeSkinMenu"
+                        :initial="{ opacity: 0, scale: 1.0, rotate: 90 }"
+                        :animate="{ 
+                          opacity: 1, 
+                          scale: 1, 
+                          rotate: 0,
+                          transition: { 
+                            duration: 0.1,
+                            delay: 0.2,
+                            ease: [0.25, 0.46, 0.45, 0.94]
+                          }
+                        }"
+                        :whileHover="{ 
+                          scale: 1.0, 
+                          rotate: 90,
+                          transition: { duration: 0.1 }
+                        }"
+                        :whileTap="{ scale: 0.9 }"
+                    >
+                        <i class="fa-duotone fa-thin fa-circle-xmark"></i>
+                    </motion.button>
+                </motion.div>
+                <div class="skin-weapon">
+                    <motion.div 
+                        class="weapon-img"
+                        :initial="{ opacity: 0, scale: 0.8, rotate: -10 }"
+                        :animate="{ 
+                          opacity: 1, 
+                          scale: 1, 
+                          rotate: 0,
+                          transition: { 
+                            duration: 0.5,
+                            delay: 0.1,
+                            ease: [0.25, 0.46, 0.45, 0.94]
+                          }
+                        }"
+                    >
+                        <img :src="displayImage" :alt="displayName" @error="handleImageError">
+                    </motion.div>
+                    <motion.p 
+                        class="weapon-name"
+                        :initial="{ opacity: 0, y: 10 }"
+                        :animate="{ 
+                          opacity: 1, 
+                          y: 0,
+                          transition: { 
+                            duration: 0.3,
+                            delay: 0.2
+                          }
+                    }">
+                        {{ displayName }}
+                    </motion.p>
+                </div>
+                <motion.div 
+                    class="skin-control"
+                    :initial="{ opacity: 0, y: 20 }"
+                    :animate="{ 
+                      opacity: 1, 
+                      y: 0,
+                      transition: { 
+                        duration: 0.3,
+                        delay: 0.3
+                      }
+                    }"
+                >
+                    <motion.button 
+                        class="skin-control-btn use-skin" 
+                        @click="useSkin" 
+                        :disabled="!selectedSkin"
+                        :whileHover="{ scale: 1.05 }"
+                        :whileTap="{ scale: 0.95 }"
+                    >
+                        ใส่สกิน
+                    </motion.button>
+                    <motion.button 
+                        class="skin-control-btn remove-skin" 
+                        @click="removeSkin"
+                        :whileHover="{ scale: 1.05 }"
+                        :whileTap="{ scale: 0.95 }"
+                    >
+                        ถอดสกิน
+                    </motion.button>
+                </motion.div>
+                <div class="skin-lists">
+                    <div 
+                        v-for="(skin, index) in displaySkinLists" 
+                        :key="index"
+                        class="skin-item"
+                        :class="{ 
+                          'selected': selectedSkin === skin.Component, 
+                          'default-skin': skin.mainskin,
+                          'disabled': skin.can === false 
+                        }"
+                        :style="{ opacity: !skin.can ? 0.6 : 1.0 }"
+                        @click="selectSkin(skin)"
+                    >
+                        <div class="skin-item-img">
+                            <i v-if="selectedSkin === skin.Component" class="fa-duotone fa-thin fa-circle-check"></i>
+                            <img :src="`img/items/${skin.Item || skin.Component}.png`" :alt="skin.Label">
+                        </div>
+                        <p class="skin-item-name truncate">{{ skin.Label }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="nc-secondary inventory">
+              <div class="nc-items" tabindex="-1"></div>
+            </div>
+          </div>
+        </div>
+        <div id="nc-inventory-footer" class="primary secondary">
+          <div class="footer">
+            <div class="nc-give-block">
+              <div class="nc-switch">
+                <iconify-icon class="on" icon="ion:checkmark"></iconify-icon
+                ><iconify-icon class="off" icon="ion:close"></iconify-icon>
+              </div>
+            </div>
+            <div class="nc-primary info">
+              <div class="nc-weight-text"></div>
+              <div class="nc-weight-bar"></div>
+            </div>
+            <div class="nc-weight-info info"><div class="text-info"></div></div>
+            <div class="nc-secondary info">
+              <div class="nc-weight-text"></div>
+              <div class="nc-weight-bar"></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-description-wrapper"></div>
+      </div>
+      <div class="nc-dialog">
+        <div id="nc-dialog-header">
+          <div class="nc-title">
+            <iconify-icon icon="ion:card"></iconify-icon>
+          </div>
+        </div>
+        <div id="nc-dialog-content">
+          <div class="nc-dialog-item">
+            <div class="nc-inputs">
+              <div></div>
+              <input id="input-count" class="input" type="number" value="1" />
+              <div class="button-max button"></div>
+            </div>
+          </div>
+          <div class="nc-inputs">
+            <div></div>
+            <input id="input-count" class="input" type="number" value="1" />
+            <div class="button-max button"></div>
+          </div>
+          <div class="nc-buttons">
+            <div class="button-confirm confirm button"></div>
+            <div class="button-cancel button"></div>
+          </div>
+        </div>
+      </div>
+      <div id="nc-selector-desc" class="delay">
+        <div class="selector-desc">
+          <div class="desc1"></div>
+          <div class="desc2"><span></span></div>
+        </div>
+      </div>
+    </div>
+    <div id="nc-selector-id-container">
+      <div id="nc-selector-id-reroll-text"></div>
+      <div id="nc-selector-id-reroll-button-wrapper">
+        <div id="nc-selector-id-reroll-button">
+          <iconify-icon icon="ion:sync"></iconify-icon><span></span>
+        </div>
+      </div>
+      <div id="nc-selector-id-give-button-wrapper">
+        <div id="nc-selector-id-give-button">
+          <iconify-icon icon="ion:cube"></iconify-icon><span></span>
+        </div>
+      </div>
+      <input
+        id="nc-selector-id-give-input"
+        maxlength="5"
+        placeholder="ID"
+        tabindex="-1"
+      />
+      <div id="nc-selector-id-wrapper"></div>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/jquery-ui.min.js"></script>
+    <script src="./js/tilt.jquery.min.js"></script>
+    <script src="./js/iconify-icon.min.js"></script>
+    <script src="./js/functions.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/custom.js"></script>
+  </body>
+</html>
