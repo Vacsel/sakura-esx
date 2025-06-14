@@ -278,13 +278,13 @@
       "enabled": false
     },
     {
-      "name": "News",
-	   "th_TH__name": "News",
-      "en_US__name": "News",
-      "tr_TR__name": "Haberler",
-      "icons": "/html/static/img/icons_app/news.png",
+      "name": "Announcements",
+      "th_TH__name": "\u0e1b\u0e23\u0e30\u0e01\u0e32\u0e28\u0e02\u0e48\u0e32\u0e27",
+      "en_US__name": "Announcements",
+      "tr_TR__name": "Duyurular",
+      "icons": "/html/static/img/icons_app/announce.png",
       "routeName": "news",
-      "enabled": false
+      "enabled": true
     },
     {
       "name": "Wanted",
@@ -332,8 +332,8 @@
       "CONFIRM": "Accept",
       "CANCEL": "Cancel",
       "APP_RINGTONE": "Ringtone",
-      "APP_NEWS": "News",
-      "APP_NEWS_DETAIL": "News Detail",
+      "APP_NEWS": "Announcements",
+      "APP_NEWS_DETAIL": "Announcement Detail",
       "APP_YOUTUBE_TITLE": "Youtube",
       "APP_YOUTUBE_PRESS_ENTER": "Press Enter Or Click Search Button",
       "APP_YOUTUBE_SEARCH": "Search Video",
@@ -518,8 +518,8 @@
       "CONFIRM": "ตกลง",
       "CANCEL": "ยกเลิก",
       "APP_RINGTONE": "เสียงเรียกเข้า",
-      "APP_NEWS": "News",
-      "APP_NEWS_DETAIL": "รายละเอียดข่าว",
+      "APP_NEWS": "ประกาศ",
+      "APP_NEWS_DETAIL": "รายละเอียดประกาศ",
       "APP_YOUTUBE_TITLE": "Youtube",
       "APP_YOUTUBE_PRESS_ENTER": "กด Enter หรือคลิกปุ่มค้นหา",
       "APP_YOUTUBE_SEARCH": "ค้นหาวิดีโอ",

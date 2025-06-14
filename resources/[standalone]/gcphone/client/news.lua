@@ -25,7 +25,7 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(wait)
-        if PlayerData.job and PlayerData.job.name == Config.newsJobName then 
+        if PlayerData.job and Config.announceJobs[PlayerData.job.name] then
             local playerPed = GetPlayerPed(-1)
             local playerPedCords = GetEntityCoords(playerPed)
             local distance = #(playerPedCords - newsMenu)

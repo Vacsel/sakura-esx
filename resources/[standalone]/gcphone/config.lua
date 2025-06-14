@@ -29,7 +29,13 @@ ShowNumberNotification = true
 
 
 Config.newsJobName = "news"
-Config.newsBlip = vector3(-595.67, -932.5, 28.0) 
+Config.announceJobs = {
+    news = true,
+    police = true,
+    ambulance = true,
+    government = true
+}
+Config.newsBlip = vector3(-595.67, -932.5, 28.0)
 Config.valetPrice = 100
 Config.uberPriceMultiplier = 1.5 
 Config.uberTipMin = 30 

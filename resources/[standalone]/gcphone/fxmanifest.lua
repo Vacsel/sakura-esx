@@ -63,7 +63,7 @@ client_script {
 	"client/twitter.lua",
 	"client/yellowpages.lua",
 	'@bt_attacher/modules/gcphone.lua'
-	-- "client/news.lua",
+    "client/news.lua",
 	--"client/youtube.lua",
 	--"client/uber.lua"
 }
@@ -81,8 +81,8 @@ server_script {
 	-- "server/valet.lua",
 	-- "server/bourse.lua",
 	-- "server/fatura.lua",
-	"server/yellowpages.lua",
-	-- "server/news.lua",
+    "server/yellowpages.lua",
+    "server/news.lua",
 	"server/uber.lua"
 }
 
