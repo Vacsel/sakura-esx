@@ -572,9 +572,9 @@ Citizen.CreateThread(function()
         -- Open radio settings
      
       --  print((Radio.Open or Radio.On) and ((not Radio.Enabled) or (not Radio.Has) or isDead or not checkHasItem('radio')))
-        if isActivatorPressed and isSecondaryPressed and Radio.Enabled and Radio.Has and not DIEcheck and checkHasItem() and exports["esx_policejob"]:handcuff() == false then
+        if isActivatorPressed and isSecondaryPressed and Radio.Enabled and Radio.Has and not DIEcheck and checkHasItem() then
             Radio:Toggle(not Radio.Open)
-        elseif (Radio.Open or Radio.On) and ((not Radio.Enabled) or (not Radio.Has) or DIEcheck or not checkHasItem() or exports["esx_policejob"]:handcuff() == true) then
+        elseif (Radio.Open or Radio.On) and ((not Radio.Enabled) or (not Radio.Has) or DIEcheck or not checkHasItem()) then
       --  elseif (Radio.Open or Radio.On) and ((not Radio.Enabled) or (not Radio.Has)) or ((not checkHasItem('radio') and isDead) and Radio.On) then
             Radio:Remove()
             -- exports["mumble-voip"]:SetMumbleProperty("radioEnabled", false)
