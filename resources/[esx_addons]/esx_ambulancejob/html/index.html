@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="ambulance">
+            <img src="img/Torii-Gate.png" class="TORI">
+            <p class="text-youare">YOU ARE DEAD</p>
+            <div class="bg-circle"></div>
+            <div class="time-main">
+                <p>REVIVE IN
+                    <div class="time-bg">
+                        <span id="time">45:00</span>
+                    </div>
+                    <span style="text-shadow: 0 0 .2vw #000000bd;">MINUTES</span>
+                </p>
+            </div>
+            <div class="reason-main">
+                <!-- <p>คุณกำลังจะหมดลมหายใจ อยากเลิกบุหรี่ 1600</p> -->
+                <div class="key-control-x" id="key-x">
+                    <p>กด <span class="key key-x">X</span> เพื่อเด้งศพ</p>
+                </div>
+                <div class="key-control-r" id="key-r">
+                    <p>กด <span class="key key-r">R</span> เพื่อขอพูด</p>
+                </div>
+                <div class="key-control-g" id="key-g">
+                    <p>กด <span class="key key-g">G</span> ขอความช่วยเหลือจากหมอ</p>
+                </div>
+                <div class="key-control-h" id="key-h">
+                    <p>กด <span class="key key-h">H</span> ขอความช่วยเหลือจากตำรวจ</p>
+                </div>
+                <div class="key-control-j" id="key-j">
+                    <p>กด <span class="key key-j">L</span> ออกจากพื้นที่</p>
+                </div>
+                <div class="key-control-p" id="key-p">
+                    <p>กด <span class="key key-p">K</span> ขอความช่วยเหลือจากแก๊งค์</span></p>
+                </div>
+            </div>
+            <div class="progressbar">
+                <div class="progressbar-fill" id="progress"></div>
+            </div>
+        </div>  
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="js/static.js"></script>
+</body>
+</html>
