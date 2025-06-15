@@ -152,6 +152,37 @@ Config['ShopPosition'] = {
                 size = {13.0,13.0,1.5},
                 color = {255,103,223,0}
             }
+        },
+
+        -- rancho hospital
+        ranchohospital = {   -- ชื่อ index ห้ามซื้อกัน
+            type = 'normal',  -- ห้ามเปลี่ยน
+            zone = vector3(1147.0167, -1563.6569, 35.4189), --  ตำแหน่งของ Blips และ Marker
+            rad = 8.0, -- ระยะที่สามารถกด E ได้
+            blip = {
+                enable = false, --  (เปิด/ปิด) Blips
+            },
+            marker = {
+                type = 1,
+                size = {13.0,13.0,1.5},
+                color = {255,103,223,0}
+            }
+        },
+
+
+        -- police station
+        policestation = {   -- ชื่อ index ห้ามซื้อกัน
+            type = 'normal',  -- ห้ามเปลี่ยน
+            zone = vector3(453.6292, -993.5718, 31.1353), --  ตำแหน่งของ Blips และ Marker
+            rad = 8.0, -- ระยะที่สามารถกด E ได้
+            blip = {
+                enable = false, --  (เปิด/ปิด) Blips
+            },
+            marker = {
+                type = 1,
+                size = {13.0,13.0,1.5},
+                color = {255,103,223,0}
+            }
         }
     },
      
