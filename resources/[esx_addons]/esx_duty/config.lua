@@ -5,7 +5,7 @@ Config['ResetTime'] = '00:05:00' -- Time to reset the duty time
 Config.Duty = {
     {
         Onduty = 'police',
-        Offduty = 'unemployed',
+        Offduty = 'offpolice',
         Position = vector3(453.3347, -996.4365, 31.1393),
         Marker = {
             Id = 27,

@@ -9,3 +9,6 @@ Items are kept in an `nc_vault` container referenced by the `Vault` id in
 database table. For example, vault `3` is the Police Department locker used to
 store duty equipment. Player item amounts are saved to the `user_offduty_items`
 table so they can be restored correctly when going back on duty.
+The off duty job name is specified in `config.lua` for each duty. For example,
+police officers become `offpolice` when leaving duty. Their current grade is
+saved and restored when they return on duty so they keep the same rank.
