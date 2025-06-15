@@ -199,10 +199,10 @@ Config.DoorList = {
 		item = false,
 		itemname = 'club_key_senior',
 		distance = 2.0,
-		textCoords = vector3(1120.4738, -1558.4438, 35.4188),
+		textCoords = vector3(1119.1839, -1558.3299, 35.4442),
 		doors = {
-			{objName = -770740285, objYaw = 183.6893, objCoords = vector3(1121.1747, -1559.0166, 35.4188)},
-			{objName = -770740285, objYaw =  0.1640, objCoords = vector3(1119.6785, -1558.7095, 35.4188)}
+			{objName = 165389302, objYaw = 80.0719, objCoords = vector3(1121.7657, -1558.3299, 35.4442)},
+			{objName = 165389302, objYaw = 99.00, objCoords = vector3(1119.1839, -1558.3299, 35.4442)}
 	 	},
 	},
 
@@ -218,11 +218,10 @@ Config.DoorList = {
 		distance = 2.0,
 		textCoords = vector3(1136.2565, -1558.4517, 35.4188),
 		doors = {
-			{objName = -770740285, objYaw = 185.6513, objCoords = vector3(1136.8177, -1558.5121, 35.4188)},
-			{objName = -770740285, objYaw =  5.7642, objCoords = vector3(1135.5236, -1558.6420, 35.4188)}
+			{objName = 165389302, objYaw = 80.3179, objCoords = vector3(1137.5131, -1558.3187, 35.4442)},
+			{objName = 165389302, objYaw = 99.3084, objCoords = vector3(1134.9313, -1558.3187, 35.4442)}
 	 	},
 	},
-
 
 	{	
 		authorizedJobs = {'ambulance', 'admin'},
