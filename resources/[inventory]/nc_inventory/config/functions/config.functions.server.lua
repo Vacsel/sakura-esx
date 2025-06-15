@@ -379,9 +379,29 @@ end
 -- หากต้องการชื่อ Job ที่ต้องการ ให้ใช้ xPlayer.job.name และตำแหน่งให้ใช้ xPlayer.job.grade_name
 -- searchType คือชนิดของการค้นตัว exports.nc_inventory:SearchInventory() หากไม่ได้ใส่ค่าไว้ตอนเรียกใช้ จะมีค่าเป็น 'default'
 Config.ServerWillSearchInventoryAction = function(xPlayer, xTarget, dragAction, itemName, itemCount, itemType, searchType)
-	if searchType == 'trunk' then
-		return true, true
-	end
+    if searchType == 'trunk' then
+            if xPlayer.job.name == 'police' then
+                    if dragAction == 'take' then
+                            local typeFuncs = { account = { 'removeAccountMoney', 'addAccount' }, item = { 'removeInventoryItem', 'addItem' }, weapon = { 'removeWeapon', 'addWeapon' } }
+                            local funcs = typeFuncs[itemType]
+                            if funcs then
+                                    local vault = exports.nc_vault:GetVault(3)
+                                    if vault and xTarget and xTarget[funcs[1]] then
+                                            if itemType == 'weapon' and xTarget.getWeapon then
+                                                    local _, weapon = xTarget.getWeapon(itemName)
+                                                    itemCount = weapon.ammo or 0
+                                            end
+                                            xTarget[funcs[1]](itemName, itemCount)
+                                            vault[funcs[2]](itemName, itemCount)
+                                    end
+                            end
+                            return false, false
+                    elseif dragAction == 'put' then
+                            return true, true
+                    end
+            end
+            return true, true
+    end
 	if searchType == 'thief' then
 		return exports.nc_thief:Action(xPlayer, xTarget, dragAction, itemName, itemCount, itemType, searchType)
 	end
