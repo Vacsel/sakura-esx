@@ -5,10 +5,22 @@ Config['ResetTime'] = '00:05:00' -- Time to reset the duty time
 Config.Duty = {
     {
         Onduty = 'police',
-        Offduty = 'offpolice',
+        Offduty = 'unemployed',
         Position = vector3(453.3347, -996.4365, 31.1393),
-        Marker = { 
+        Marker = {
             Id = 27,
+        },
+        -- Vault identifier for duty equipment. The id corresponds to the
+        -- `_id` column in the `nc_vault` table. Vault `3` is the dedicated
+        -- Police Department locker used to store seized duty items.
+        Vault = 3,
+        Items = {
+            'radio_job',
+            'fixkit_job',
+            'painkiller_job',
+            'aed_job',
+            'armor_job',
+            'snockle_job'
         }
     },
     -- {
