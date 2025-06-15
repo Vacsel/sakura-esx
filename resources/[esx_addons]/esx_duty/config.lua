@@ -23,14 +23,25 @@ Config.Duty = {
             'snockle_job'
         }
     },
-    -- {
-    --     Onduty = 'ambulance',
-    --     Offduty = 'offambulance',
-    --     Position = vector3(1132.2793, -1539.6833, 35.4188-0.97),
-    --     Marker = {
-    --         Id = 27,
-    --     }
-    -- },
+    {
+        Onduty = 'ambulance',
+        Offduty = 'offambulance',
+        Position = vector3(1132.2793, -1539.6833, 35.4188 - 0.97),
+        Marker = {
+            Id = 27,
+        },
+        -- Vault identifier for medical equipment. Replace `4` with the
+        -- appropriate locker id from the `nc_vault` table if different.
+        Vault = 4,
+        Items = {
+            'radio_job',
+            'fixkit_job',
+            'painkiller_job',
+            'aed_job',
+            'armor_job',
+            'snockle_job'
+        }
+    },
     {
         Onduty = 'council',
         Offduty = 'offcouncil',
