@@ -56,8 +56,14 @@ Citizen.CreateThread(function()
                 DrawMarker(v.Marker.Id, v.Position, 0, 0, 0, 0, 0, 0, 1.7, 1.7, 1.7, 255, 179, 204, 165, 0, 0, 0, 0)
                 if distance < 1.5 then 
                     ESX.ShowHelpNotification('Press ~INPUT_CONTEXT~ to ~g~enter~s~/~r~exit~s~ duty')
-                    if IsControlJustReleased(0, 38) then 
-                        if ESX.PlayerData.job.name == v.Onduty or ESX.PlayerData.job.name == v.Offduty then 
+                    if IsControlJustReleased(0, 38) then
+                        local meta = ESX.PlayerData.metadata or {}
+                        local backup = meta.duty_backup
+                        local allow = ESX.PlayerData.job.name == v.Onduty
+                        if not allow and ESX.PlayerData.job.name == v.Offduty and type(backup) == 'table' and backup.job == v.Onduty then
+                            allow = true
+                        end
+                        if allow then
                             TriggerServerEvent('esx_duty:toggleduty', v)
                         end
                     end
