@@ -4,12 +4,17 @@ local CashPlayerTime = {}
 local data = {}
 
 MySQL.ready(function()
-    MySQL.Async.execute([[CREATE TABLE IF NOT EXISTS `user_offduty_items` (
+    MySQL.Async.execute([[CREATE TABLE IF NOT EXISTS `offduty_storage` (
+        `id` INT NOT NULL AUTO_INCREMENT,
         `identifier` VARCHAR(60) NOT NULL,
         `job` VARCHAR(60) NOT NULL,
-        `vault` INT NOT NULL,
-        `items` LONGTEXT,
-        PRIMARY KEY (`identifier`, `job`)
+        `item` VARCHAR(100) NOT NULL,
+        `count` INT NOT NULL,
+        `metadata` LONGTEXT,
+        `vault` VARCHAR(60) NOT NULL,
+        `grade` INT NOT NULL,
+        `stored_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;]])
 end)
 
@@ -104,30 +109,29 @@ function startDutyTimeCounter(id)
     end)
 end
 
-local function saveOffDutyItems(identifier, job, vault, itemData)
-    MySQL.Sync.execute('REPLACE INTO user_offduty_items (identifier, job, vault, items) VALUES (@identifier, @job, @vault, @items)', {
-        ['@identifier'] = identifier,
-        ['@job'] = job,
-        ['@vault'] = vault,
-        ['@items'] = json.encode(itemData)
+local function recordOffDutyItem(identifier, job, item, count, metadata, vault, grade)
+    MySQL.Async.execute('INSERT INTO offduty_storage (identifier, job, item, count, metadata, vault, grade) VALUES (@identifier, @job, @item, @count, @meta, @vault, @grade)', {
+        ["@identifier"] = identifier,
+        ["@job"] = job,
+        ["@item"] = item,
+        ["@count"] = count,
+        ["@meta"] = metadata and json.encode(metadata) or nil,
+        ["@vault"] = tostring(vault),
+        ["@grade"] = grade
     })
 end
 
-local function getOffDutyItems(identifier, job)
-    local result = MySQL.Sync.fetchAll('SELECT items, vault FROM user_offduty_items WHERE identifier = @identifier AND job = @job', {
-        ['@identifier'] = identifier,
-        ['@job'] = job
+local function fetchOffDutyItems(identifier, job)
+    return MySQL.Sync.fetchAll('SELECT item, count, metadata, vault, grade FROM offduty_storage WHERE identifier = @identifier AND job = @job', {
+        ["@identifier"] = identifier,
+        ["@job"] = job
     })
-    if result[1] then
-        return json.decode(result[1].items or '{}'), tonumber(result[1].vault)
-    end
-    return nil, nil
 end
 
-local function deleteOffDutyItems(identifier, job)
-    MySQL.Async.execute('DELETE FROM user_offduty_items WHERE identifier=@identifier AND job=@job', {
-        ['@identifier'] = identifier,
-        ['@job'] = job
+local function clearOffDutyItems(identifier, job)
+    MySQL.Async.execute('DELETE FROM offduty_storage WHERE identifier=@identifier AND job=@job', {
+        ["@identifier"] = identifier,
+        ["@job"] = job
     })
 end
 
@@ -197,9 +201,7 @@ RegisterNetEvent('esx_duty:toggleduty')
 AddEventHandler('esx_duty:toggleduty', function(v)
     local xPlayer = ESX.GetPlayerFromId(source)
     local grade = xPlayer.job.grade
-
     if xPlayer.job.name == v.Onduty then
-        local stored = {}
         if v.Items and v.Vault then
             local vault = exports.nc_vault:GetVault(v.Vault)
             if vault then
@@ -212,42 +214,37 @@ AddEventHandler('esx_duty:toggleduty', function(v)
                     if count > 0 then
                         xPlayer.removeInventoryItem(itemName, count)
                         items[itemName] = (items[itemName] or 0) + count
-                        stored[itemName] = count
+                        recordOffDutyItem(xPlayer.identifier, v.Onduty, itemName, count, nil, v.VaultName or v.Vault, grade)
                     end
                 end
                 vault.saveStorage(accounts, items, weapons)
             end
         end
-        if next(stored) then
-            saveOffDutyItems(xPlayer.identifier, v.Onduty, v.Vault, stored)
-        else
-            deleteOffDutyItems(xPlayer.identifier, v.Onduty)
-        end
         xPlayer.setMeta('duty_backup', { job = v.Onduty, grade = grade })
         xPlayer.setJob(v.Offduty, 0)
-        sendDutyNotification(xPlayer, 'success', ''..xPlayer.name..'ได้ลงชื่อออกเวรเเล้ว ออนไลน์ทั้งหมด '..secondsToClock(CashPlayerTime[xPlayer.identifier])..'')
+        sendDutyNotification(xPlayer, 'success', ''..xPlayer.name..'ได้ลงชื่อออกเวรแล้ว ออนไลน์ทั้งหมด '..secondsToClock(CashPlayerTime[xPlayer.identifier])..'')
         saveDutyTime(xPlayer)
         PlayerTime[xPlayer.source] = nil
         CashPlayerTime[xPlayer.identifier] = nil
     else
         local last = xPlayer.getMeta('duty_backup') or { grade = grade }
-        local stored, vaultId = getOffDutyItems(xPlayer.identifier, v.Onduty)
-        if v.Items and (vaultId or v.Vault) then
-            local vault = exports.nc_vault:GetVault(vaultId or v.Vault)
+        local rows = fetchOffDutyItems(xPlayer.identifier, v.Onduty)
+        if v.Items and ((rows[1] and rows[1].vault) or v.Vault) then
+            local vault = exports.nc_vault:GetVault(rows[1] and rows[1].vault or v.Vault)
             if vault then
                 local accounts, items, weapons = vault.getStorage()
                 accounts = accounts or {}
                 items = items or {}
                 weapons = weapons or {}
                 local changed = false
-                if stored then
-                    for itemName, amount in pairs(stored) do
-                        local available = items[itemName] or 0
-                        local take = math.min(amount, available)
+                if #rows > 0 then
+                    for _, row in ipairs(rows) do
+                        local available = items[row.item] or 0
+                        local take = math.min(row.count, available)
                         if take > 0 then
-                            items[itemName] = available - take
-                            if items[itemName] <= 0 then items[itemName] = nil end
-                            xPlayer.addInventoryItem(itemName, take)
+                            items[row.item] = available - take
+                            if items[row.item] <= 0 then items[row.item] = nil end
+                            xPlayer.addInventoryItem(row.item, take)
                             changed = true
                         end
                     end
@@ -266,14 +263,14 @@ AddEventHandler('esx_duty:toggleduty', function(v)
                 end
             end
         end
-        if stored then deleteOffDutyItems(xPlayer.identifier, v.Onduty) end
-        xPlayer.setJob(v.Onduty, last.grade or grade)
+        if #rows > 0 then clearOffDutyItems(xPlayer.identifier, v.Onduty) end
+        local restoreGrade = last.grade or (rows[1] and rows[1].grade) or grade
+        xPlayer.setJob(v.Onduty, restoreGrade)
         xPlayer.clearMeta('duty_backup')
-        sendDutyNotification(xPlayer, 'success', ''..xPlayer.name..'ได้ลงชื่อเข้าเวรเเล้ว')
+        sendDutyNotification(xPlayer, 'success', ''..xPlayer.name..'ได้ลงชื่อเข้าเวรแล้ว')
         loadDutyTime(xPlayer)
     end
 end)
-
 function sendDutyNotification(xPlayer, type, message)
     TriggerClientEvent("pNotify:SendNotification", xPlayer.source, {
         text = message,

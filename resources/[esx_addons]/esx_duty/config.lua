@@ -14,6 +14,7 @@ Config.Duty = {
         -- `_id` column in the `nc_vault` table. Vault `3` is the dedicated
         -- Police Department locker used to store seized duty items.
         Vault = 3,
+        VaultName = 'nc_vault_police',
         Items = {
             'weapon_pistol',
             'weapon_stungun',
@@ -28,7 +29,7 @@ Config.Duty = {
             'painkiller_job',
             'aed_job',
             'armor_job',
-            'snockle_job'
+            'snockle_job',
             'dynamite',
             'dynamite_job',
             'handcuffs_job',
