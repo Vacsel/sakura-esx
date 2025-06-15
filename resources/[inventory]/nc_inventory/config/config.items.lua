@@ -614,6 +614,7 @@ Config.ItemsActionList = {
 			'marble', -- ลูกแก้ว
 			'medic_pass', -- Medic Pass
 			'medic_ticket', -- Medic Ticket
+			'card_revive', -- Card Revive
 			'medicarmband1', -- ผู้อำนวยการ
 			'medicarmband2', -- เลขา
 			'medicarmband3', -- รองผู้อำนวยการ
