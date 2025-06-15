@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://poseidon-code.github.io/supacons/dist/supacons.all.css">
+    <script src="https://unpkg.com/vue@3.5.13/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>D9DEV</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <transition>
+            <div v-if="display" class="display w-full h-[100vh]">
+                <div class="bgmain w-[100%] h-[100%] flex justify-center items-center">
+                    <div>
+                        <div class="flex items-center justify-center w-full h-auto">
+                            <div
+                                class="topbox w-[22vw] h-[3vw] bg-black flex justify-center items-center text-white text-[1.2vw] font-bold">
+                                CRAFTING TABLE
+                            </div>
+                        </div>
+
+                        <div class="w-full h-auto flex justify-center items-center mt-[.8vw] relative">
+                            <div class="w-[46vw] h-auto bg-black rounded-[.4vw] p-[.4vw] flex relative">
+                                <div class="dot size-[.15vw] rounded-[50%] bg-white absolute top-1 left-1 z-50"></div>
+                                <div class="dot size-[.15vw] rounded-[50%] bg-white absolute bottom-1 left-1 z-50">
+                                </div>
+                                <div class="dot size-[.15vw] rounded-[50%] bg-white absolute top-1 right-1 z-50"></div>
+                                <div class="dot size-[.15vw] rounded-[50%] bg-white absolute bottom-1 right-1 z-50">
+                                </div>
+                                <div class="flex gap-[.2vw] menuStr">
+                                    <div v-for="(item, key) in items" :key="key" @click="updateSelectType(key)"
+                                        :class="[ key == selectType ? 'active' : '']"
+                                        class="h-[1.62vw] px-[.6vw] bg-[#272727] rounded-[.2vw] hover:bg-gradient-to-b from-black to-[#C6547D]/60 border border-transparent hover:border-[#FF8CB5]/60 text-white text-[.75vw] flex justify-center items-center hover:cursor-pointer">
+                                        {{ item.Name }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="main flex relative mt-[1.4vw]">
+                            <div class="bg-black/60 rounded-[.8vw] overflow-hidden ring-[.5vw] ring-black">
+                                <div
+                                    class="w-[19vw] h-[27.2vw] bg-gradient-to-b from-black/60 to-[#33121E]/60 relative flex justify-center items-center flex-col">
+                                    <div
+                                        class="top-0 w-full flex justify-center items-center text-white text-[1vw] font-bold">
+                                        ITEM LIST
+                                    </div>
+                                    <div
+                                        class="list w-[16vw] h-[80%] bg-gradient-to-b from-[#FF8CB5] to-[#FF8CB5]/0 rounded-[.8vw] overflow-hidden p-[.15vw]">
+                                        <div
+                                            class="grid grid-cols-3 place-content-start gap-2 w-full h-full bg-[#101010] rounded-[.8vw] p-[.4vw] overflow-y-scroll itemList">
+                                            <div v-for="(item, index) in itemList" :key="index"
+                                                @click="selectItemIndex = index"
+                                                :class=" [ selectItemIndex == index ? 'active' : '' ] "
+                                                class="w-full h-[5.6vw] bg-white/5 rounded-[.6vw] hover:bg-gradient-to-b from-black to-[#C6547D]/60 hover:border border-[#FF8CB5] hover:cursor-pointer">
+                                                <div class="w-full h-[80%] flex justify-center items-center">
+                                                    <img class="h-[3.8vw]" :src="`${imagePath}${item.name}.png`" alt="">
+                                                </div>
+                                                <div
+                                                    class="w-full h-[20%] flex justify-center items-start text-white font-normal text-[.55vw]">
+                                                    {{ item.label }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-[20vw] h-auto relative flex justify-center">
+                                <div class="mainbox absolute w-full h-[19.6vw] -top-[.4vw]">
+                                    <div class="relative flex items-center justify-center w-full h-full">
+                                        <div class="absolute top-[2%] min-w-[8vw] h-auto bg-black rounded-[.4vw] border border-[#fff] text-white text-[.8vw] px-[.4vw] py-[.2vw] flex justify-center items-center"
+                                            id="nameShow">
+                                            {{ itemSelect.label }}
+                                        </div>
+                                        <img class="h-[10vw]" :src="`${imagePath}${itemSelect.name}.png`" id="imgSelect" alt="">
+                                        <div
+                                            class="absolute bottom-[15%] w-auto h-auto flex justify-center items-center text-white text-[.6vw]">
+                                            โอกาสสำเร็จ<span id="ratePer" class="ml-1"> {{itemSelect?.rate}}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="absolute bottom-0 w-full h-[8.5vw] px-[.8vw] pt-[.4vw] -mb-[.2vw]">
+                                    <div class="w-full h-full bg-black/60 rounded-[.8vw] overflow-hidden border-[.15vw] border-black">
+                                        <div class="w-full h-full bg-gradient-to-b from-black/60 to-[#33121E]/60 relative py-[.4vw]">
+                                            <div class="w-full h-[30%]">
+                                                <div class="w-full h-[50%] flex justify-center items-end text-white text-[.6vw]">
+                                                    Loading in Process
+                                                    <p class="text-[#FF8CB5] pl-[.2vw]">
+                                                        {{craftingProgress}}%
+                                                    </p>
+                                                </div>
+                                                <div class="w-full h-[50%] flex justify-center items-center">
+                                                    <div
+                                                        class="w-[80%] h-[.5vw] bg-[#101010] ring ring-black rounded-[.15vw]">
+                                                        <div :style="{ width: `${craftingProgress}%` }" class="w-[0%] h-full bg-gradient-to-r from-[#FF4D8C] to-[#FF8CB5] border-r-[.15vw] borde-white transition-all" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="w-full h-[70%] flex px-[.4vw]">
+                                                <div class="w-[50%] h-full flex justify-center items-center">
+                                                    <div @click="decreaseCount" class="updown hover:cursor-pointer size-[2vw] flex justify-center items-center text-white text-[1.6vw] -mr-[.8vw] z-50">
+                                                        -
+                                                    </div>
+                                                    <!-- <input v-model="count" value="1" id="count" class="block w-[4vw] p-[.4vw] text-white text-center border border-none focus:outline-none bg-black text-[.6vw]" type="number"> -->
+                                                    <input
+                                                        v-model.number="count"
+                                                        id="count"
+                                                        type="number"
+                                                        class="block w-[4vw] p-[.4vw] text-white text-center border border-none focus:outline-none bg-black text-[.6vw]"
+                                                        min="1"
+                                                        :max="itemSelect.maxCount"
+                                                        step="1"
+                                                        @blur="sanitizeCount"
+                                                    />
+                                                    <div @click="increaseCount" class="updown hover:cursor-pointer size-[2vw] flex justify-center items-center text-white text-[1.6vw] -ml-[.8vw] z-50">
+                                                        +
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="w-[50%] h-full flex justify-center items-center">
+                                                    <div class="space-y-1">
+                                                        <div @click="craftItem"
+                                                            class="px-[1.8vw] py-[.3vw] bg-[#101010] rounded-[.3vw] flex justify-center items-center text-white text-[.6vw] hover:bg-gradient-to-b from-black to-[#C6547D]/60 hover:border border-[#FF8CB5] hover:cursor-pointer craftItem">
+                                                            CONFIRM
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-black/60 rounded-[.8vw] overflow-hidden ring-[.5vw] ring-black">
+                                <div
+                                    class="w-[19vw] h-[27.2vw] bg-gradient-to-b from-black/60 to-[#33121E]/60 relative flex justify-center items-center">
+                                    <div
+                                        class="list w-[16vw] h-[80%] bg-gradient-to-b from-[#FF8CB5] to-[#FF8CB5]/0 rounded-[.8vw] overflow-hidden p-[.15vw]">
+                                        <div
+                                            class="w-full h-full bg-[#101010] rounded-[.8vw] p-[.4vw] overflow-y-scroll">
+                                            <div
+                                                class="list w-full h-[70%] bg-gradient-to-b from-[#FF8CB5] to-[#FF8CB5]/0 rounded-[.8vw] overflow-hidden p-[.15vw]">
+                                                <div class="w-full h-full bg-[#1C1C1C] rounded-[.8vw]">
+                                                    <div class="w-full h-[20%] flex justify-center items-center text-white text-[.8vw]">วัสดุที่ใช้คราฟ</div>
+                                                    <div
+                                                        class="w-[100%] h-[80%] overflow-y-scroll matNeed flex items-center flex-col gap-[.2vw]">
+                                                        <div v-for="(item, index) in itemNeeds" :key="index"
+                                                            :class="[ item.have >= item.amount * count ? 'active-mat': 'not-active-mat' ]"
+                                                            class="matN1 w-[100%] h-[1vw] p-[.8vw] flex">
+                                                            <div
+                                                                class="w-[30%] h-full flex justify-center items-center">
+                                                                <img class="h-[1.8vw]" :src="`${imagePath}${item.name}.png`" alt="">
+                                                            </div>
+                                                            <div
+                                                                class="w-[50%] h-full flex justify-center items-center text-white text-[.6vw]">
+                                                                {{ item.label }}
+                                                            </div>
+                                                            <div
+                                                                class="w-[30%] h-full flex justify-center items-center text-white text-[.6vw]">
+                                                                {{item.have }}/{{item.amount * count}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="w-full h-[30%]">
+                                                <div class="w-full h-[50%]">
+                                                    <div
+                                                        class="w-full h-[50%] flex justify-start items-center text-[#FF8CB5] text-[.7vw]">
+                                                        Equipment:
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <div v-for="(item, index) in itemSelect.equipment" :key="index"
+                                                            class="h-[50%] flex justify-end items-center text-[#FF8CB5] text-[.7vw] space-x-2 matNeed4">
+                                                            <img class="h-[1.4vw]" :src="`${imagePath}${item.name}.png`" alt="">
+                                                            <div
+                                                                class="w-auto h-full text-white text-[.6vw] flex justify-center items-center">
+                                                                {{ item.name }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full h-[50%]">
+                                                    <div
+                                                        class="w-full h-[50%] flex justify-start items-center text-[#FF8CB5] text-[.7vw]">
+                                                        Failled to get:
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <div v-for="(item, index) in itemSelect.failItem" :key="index"
+                                                            class="h-[50%] flex justify-end items-center text-[#FF8CB5] text-[.7vw] space-x-2 matNeed4">
+                                                            <img class="h-[1.4vw]" :src="`${imagePath}${item.name}.png`" alt="">
+                                                            <div
+                                                                class="w-auto h-full text-white text-[.6vw] flex justify-center items-center">
+                                                                {{ item.name }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="absolute bottom-[3%] text-white text-[.75vw] flex justify-center items-center space-x-[.2vw]">
+                                        <div
+                                            class="flex justify-center items-center text-green-400 bg-green-900 rounded-[.2vw] px-[.8vw] py-[.1vw]">
+                                            $<p id="money">{{(itemSelect?.cost ?? 0) * count}}</p>
+                                        </div>
+                                        <div
+                                            class="flex justify-center items-center text-red-400 bg-red-900 rounded-[.2vw] px-[.8vw] py-[.1vw]">
+                                            $<p id="black_money">{{(itemSelect?.black_money ?? 0) * count}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+
+        <transition-group>
+            <div v-if="failArea" class="failArea">
+                <div class="failIcon">
+                    <div class="lineFail1"></div>
+                    <div class="lineFail2"></div>
+                </div>
+                <div class="failL">
+                    <p>FAIL</p>
+                    <p id="textFail">{{ failText }}</p>
+                </div>
+            </div>
+            <div v-if="successArea" class="successArea">
+                <div class="successIcon">
+                    <div class="linesuccess1"></div>
+                    <div class="linesuccess2"></div>
+                </div>
+                <div class="successL">
+                    <p>SUCCESS</p>
+                    <p id="textSuccess">{{ successText }}</p>
+                </div>
+            </div>
+            <div v-if="alertDisplay" class="alertDisplay">
+                <div class="alertArea">
+                    <div class="alertIcon">
+                        <p>!</p>
+                    </div>
+                    <div class="alertL">
+                        <p>ERROR</p>
+                        <p id="textAlert"> {{ alertText }} </p>
+                    </div>
+                </div>
+            </div>
+            <div v-if="errorDisplay" class="errorDisplay">
+                <div class="alertArea">
+                    <div class="alertIcon">
+                        <p>!</p>
+                    </div>
+                    <div class="alertL">
+                        <p>ERROR</p>
+                        <p id="textAlert"> {{ errorText }} </p>
+                    </div>
+                </div>
+            </div>
+        </transition-group>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="./app.js"></script>
+    <!-- <script src="js/main.js"></script> -->
+</body>
+
+</html>

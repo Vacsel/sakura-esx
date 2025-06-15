@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://poseidon-code.github.io/supacons/dist/supacons.all.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'custom-pink': '#FF6F9C',
+                        'custom-gray': '#8A8A8F',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="w-[64.48vw] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" v-show="display">
+            <!-- Header -->
+            <header class="flex justify-center items-end flex-col mb-[0.47vw] p-[0_1vw]">
+                <div class="flex flex-col items-end leading-[1]">
+                    <p class="text-[1.67vw] text-[#FF6F9C]">Crafting Table</p>
+                    <p class="text-[1.04vw] text-[#FFF]">โต๊ะคราฟสิ่งของ</p>
+                </div>
+            </header>
+            <div class="w-[100%] h-[39.38vw] bg-[#0C0C0C] rounded-[1.56vw] relative p-[1vw_1.8vw]">
+                <!-- Navbar -->
+                <div class="flex gap-[0.42vw] justify-center mb-[1.93vw]">
+                    <div v-for="(category, type) in items" :key="type" 
+                         @click="updateSelectType(type)"
+                         :class="['w-[7.03vw] max-w-[7.03vw] h-[2.19vw] relative rounded-[0.31vw] text-white flex items-center justify-center cursor-pointer transition-all duration-300 border-[0.05vw] border-transparent', 
+                                selectType === type ? 'bg-[#8A8A8F]/20 border-white/50' : 'bg-[#8A8A8F]/5 text-[#8A8A8F] hover:border-white/50 hover:bg-[#8A8A8F]/10']">
+                        <p class="text-[0.83vw]">{{ category.Name || type }}</p>
+                    </div>
+                </div>
+                <!-- Main Content -->
+                <div class="w-[100%] h-[33.02vw] flex gap-[1.3vw]">
+                    <!-- Item lists -->
+                    <div class="w-[19.06vw] h-[30.16vw] relative mt-[3.4vw]">
+                        <header>
+                            <p class="text-[0.78vw] text-[#8A8A8F]">Item List : </p>
+                        </header>
+                        <div class="w-[100%] max-h-[94%] flex flex-wrap gap-[0.3vw] overflow-y-auto pr-[0.83vw] pb-[0.3vw]">
+                            <div v-for="(item, index) in itemList" :key="index"
+                                 @click="selectItemIndex = index"
+                                 class="w-[5.63vw] h-[6.82vw] relative">
+                                <div :class="['w-[5.63vw] h-[5.63vw] rounded-[0.52vw] cursor-pointer hover:bg-[#8A8A8F]/10 transition-all duration-300 border-[0.05vw] border-transparent',
+                                           selectItemIndex === index ? 'bg-[#8A8A8F]/20 border-white/50' : 'bg-[#8A8A8F]/5']">
+                                    <img :src="`${imagePath}${item.name}.png`" :alt="item.name" class="object-contain w-full h-full p-2">
+                                </div>
+                                <p :class="['text-[0.68vw] text-center mt-[0.36vw] truncate', 
+                                          selectItemIndex === index ? 'text-[#FFF]' : 'text-[#8A8A8F]']">{{ item.label }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item Selector Show -->
+                    <div class="w-[21.2vw] h-[100%] flex flex-col gap-[0.89vw]">
+                        <div class="relative w-[21.2vw] h-[29.95vw] rounded-[1.56vw] bg-[rgba(0,0,0,0.1)] bg-[radial-gradient(circle,rgba(0,0,0,0.44)_0%,rgba(138,138,143,0.05)_40%)] shadow-[inset_0_0_1.04vw_0.26vw_rgba(12,12,12,1)]">
+                            <p class="text-[1.67vw] text-[#8A8A8F] text-center mt-[2.4vw] truncate tracking-[-0.05vw]">{{ itemSelect?.label || 'Select Item' }}</p>
+                            <img v-if="itemSelect?.name" :src="`${imagePath}${itemSelect.name}.png`" :alt="itemSelect.name" class="w-[13.33vw] h-[13.33vw] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                            <div class="absolute bottom-[5%] left-1/2 -translate-x-1/2 w-[100%] flex flex-col gap-[0.68vw] items-center justify-center">
+                                <p class="text-[#8A8A8F] text-[0.73vw]">กำลังคราฟ <span class="text-[#FF6F9C]">{{ craftingProgress }}%</span></p>
+                                <div class="w-[15.83vw] h-[0.42vw] bg-[#0C0C0C] rounded-[1.56vw] relative overflow-hidden">
+                                    <div :style="{ width: craftingProgress + '%' }" class="h-[100%] bg-[#FF6F9C] rounded-[1.56vw] transition-all duration-300"></div>
+                                </div>
+                                <div class="w-[100%] h-auto flex justify-center items-center">
+                                    <div @click="decreaseCount" class="updown cursor-pointer size-[2vw] flex justify-center items-center text-white text-[1.6vw] z-50">
+                                        -
+                                    </div>
+                                    <input
+                                        v-model.number="count"
+                                        id="count"
+                                        type="number"
+                                        class="block w-[4vw] p-[.4vw] rounded-md text-white text-center border border-none focus:outline-none bg-[#8a8a8f]/5 text-[.6vw] hover:bg-[#8a8a8f]/10 transition-all duration-300"
+                                        min="1"
+                                        :max="itemSelect?.maxCount || 1"
+                                        step="1"
+                                        @blur="sanitizeCount"
+                                    />
+                                    <div @click="increaseCount" class="updown cursor-pointer size-[2vw] flex justify-center items-center text-white text-[1.6vw] z-50">
+                                        +
+                                    </div>
+                                </div>
+                                <div class="w-[100%] flex items-center justify-center gap-[1.04vw]">
+                                    <label class="flex items-center justify-center gap-[0.4vw] cursor-pointer">
+                                        <input type="checkbox" v-model="useSuccessPotion" class="custom-checkbox" @change="changeEnableSuccessPotion(useSuccessPotion)">
+                                        <span class="text-[0.52vw] text-[#8A8A8F] font-semibold mt-[0.1vw]">น้ำยาเพิ่มเปอร์เซ็นต์</span>
+                                    </label>
+                                    <label class="flex items-center justify-center gap-[0.4vw] cursor-pointer">
+                                        <input type="checkbox" v-model="useFailPotion" class="custom-checkbox" @change="changeEnableFailPotion(useFailPotion)">
+                                        <span class="text-[0.52vw] text-[#8A8A8F] font-semibold mt-[0.1vw]">น้ำยากันแตก</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[21.2vw] h-[2.19vw] flex items-center justify-center gap-[0.4vw]">
+                            <div v-if="!disableControl" @click="craftItem" class="w-[7.03vw] h-[2.19vw] bg-[#FF6F9C]/60 rounded-[0.31vw] border-[0.05vw] border-[#FFA1C3] flex items-center justify-center cursor-pointer hover:bg-[#FF6F9C]/50 transition-all duration-300">
+                                <p class="text-[0.83vw] text-[#FFF] text-center mt-[0.15vw]"><i class="fa-regular fa-pen-to-square text-[#FF6F9C]"></i> Craft</p>
+                            </div>
+                            <div v-else class="w-[7.03vw] h-[2.19vw] bg-[#8A8A8F]/20 rounded-[0.31vw] border-[0.05vw] border-[#FFFFFF]/50 flex items-center justify-center">
+                                <p class="text-[0.83vw] text-[#FFF] text-center mt-[0.15vw]"><i class="fa-regular fa-pen-to-square"></i> Craft</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item Detail -->
+                    <div class="w-[18.49vw] h-[29.17vw] mt-[3.1vw]">
+                        <header class="flex items-center justify-between p-[0_.7vw_0_0]">
+                            <label class="flex items-center justify-center gap-[0.4vw] cursor-pointer">
+                                <input type="checkbox" v-model="useSafeItems" class="custom-checkbox" @change="changeUseVault(useSafeItems)">
+                                <span class="text-[0.52vw] text-[#8A8A8F] font-semibold mt-[0.15vw]">ใช้ไอเท็มจากตู้เซฟ</span>
+                            </label>
+                            <p class="text-[0.78vw] text-[#8A8A8F]">Materials : </p>
+                        </header>
+                        <div class="w-[100%] h-[11.7vw] mt-[0.57vw] overflow-y-auto pr-[0.31vw] flex flex-col gap-[0.3vw]">
+                            <div v-for="(need, index) in itemNeeds" :key="index"
+                                 :class="['w-[100%] min-h-[2.08vw] rounded-[0.31vw] relative flex items-center justify-between border-[0.05vw]',
+                                         need.have >= need.amount * count ? 'bg-[linear-gradient(270deg,rgba(138,138,143,0.05)_0%,rgba(255,111,156,0.05)_100%)] border-gradient-pink' : 'bg-[#8A8A8F]/5 border-nxt']">
+                                <div class="w-[50%] flex items-center gap-[0.3vw] h-[2.19vw]">
+                                    <div class="w-[2.19vw] h-[2.19vw] flex items-center justify-center shrink-0">
+                                        <img :src="`${imagePath}${need.name}.png`" :alt="need.name" class="w-[80%] object-cover">
+                                    </div>
+                                    <p class="text-[0.73vw] text-[#8A8A8F] text-left text-nowrap overflow-hidden text-ellipsis whitespace-nowrap">{{ need.label }}</p>
+                                </div>
+                                <div class="p-[0_.4vw] flex items-center justify-center">
+                                    <p :class="['text-[0.73vw] text-center', need.have ? 'text-[#fff]' : 'text-[#8A8A8F]']">{{ formatNumber(need.have) }}/{{ formatNumber(need.amount * count) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-[100%] flex items-center gap-[1vw] mt-[1vw]">
+                            <div class="flex items-center gap-[0.4vw]">
+                                <i class="fa-sharp fa-regular fa-circle-dollar text-[#FF6F9C] text-[0.73vw]"></i>
+                                <span class="text-[0.73vw] font-semibold" :class="[money > itemSelect?.cost * count ? 'text-[#FFF]' : 'text-[#8A8A8F]']">{{ formatNumber(money) }}</span> <!-- เงินในตัวผู้เล่น -->
+                                <span class="text-[0.73vw] text-[#8A8A8F] font-semibold">/ {{ formatNumber(itemSelect?.cost * count || 0) }}</span>
+                            </div>
+                            <div class="flex items-center gap-[0.4vw]">
+                                <i class="fa-sharp fa-regular fa-circle-dollar text-[#FF3B3B] text-[0.73vw]"></i>
+                                <span class="text-[0.73vw] font-semibold" :class="[black_money > itemSelect?.black_money * count ? 'text-[#FFF]' : 'text-[#8A8A8F]']">{{ formatNumber(black_money) }}</span> <!-- เงินผิดกฎหมายในตัวผู้เล่น -->
+                                <span class="text-[0.73vw] text-[#8A8A8F] font-semibold">/ {{ formatNumber(itemSelect?.black_money * count || 0) }}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-[0.4vw] text-[#8A8A8F] text-[.73vw] mt-[.5vw]">
+                            โอกาสสำเร็จ<span id="ratePer" class="ml-1"> {{itemSelect?.rate}}%</span>
+                        </div>
+                        <div class="w-[100%] flex flex-col items-end gap-[1vw] mt-[1.5vw]">
+                            <div>
+                                <p class="text-[0.78vw] text-[#8A8A8F] font-semibold mb-[0.3vw]">สิ่งที่ได้รับเมื่อคราฟไม่สำเร็จ :</p>
+                                <div class="flex items-center justify-end gap-[0.7vw]">
+                                    <span class="text-[0.73vw] text-[#8A8A8F]">{{ itemSelect?.failItem?.label || 'ไม่มี' }}</span>
+                                    <div v-if="itemSelect?.failItem?.image" class="w-[2.08vw] h-[2.08vw] bg-[#8A8A8F]/5 rounded-[0.31vw]">
+                                        <img :src="`${imagePath}${itemSelect.failItem.name}.png`" :alt="itemSelect.failItem.name" class="object-contain w-full h-full p-1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-[0.78vw] text-[#8A8A8F] font-semibold mb-[0.3vw]">สิ่งที่ได้รับเมื่อคราฟสำเร็จ :</p>
+                                <div class="flex items-center justify-end gap-[0.7vw]">
+                                    <span class="text-[0.73vw] text-[#8A8A8F]">{{ itemSelect?.label || 'ไม่มี' }}</span>
+                                    <div v-if="itemSelect?.name" class="w-[2.08vw] h-[2.08vw] bg-[#8A8A8F]/20 rounded-[0.31vw] border-[0.05vw] border-[#FFFFFF]/50">
+                                        <img :src="`${imagePath}${itemSelect.name}.png`" :alt="itemSelect.name" class="object-contain w-full h-full p-1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Messages -->
+        <div v-if="successArea" class="alert success">
+            {{ successText }}
+        </div>
+        <div v-if="failArea" class="alert fail">
+            {{ failText }}
+        </div>
+        <div v-if="alertDisplay" class="alert">
+            {{ alertText }}
+        </div>
+        <div v-if="errorDisplay" class="alert error">
+            {{ errorText }}
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

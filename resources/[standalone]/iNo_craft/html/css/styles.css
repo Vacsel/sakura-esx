@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    font-family: 'Prompt', sans-serif;
+    user-select: none;
+}
+
+body {
+    font-weight: 500;
+}
+
+/* webscroll */
+::-webkit-scrollbar {
+    width: 0.52vw;
+    background-color: rgba(138, 138, 143, 0.05);
+    border-radius: 0.52vw;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(138, 138, 143, 0.2);
+    border-radius: 0.52vw;
+}
+
+.custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 0.99vw;
+    height: 0.99vw;
+    border-radius: 0.1vw;
+    border: 0.05vw solid transparent;
+    background: rgba(138, 138, 143, 0.05);
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    outline: none;
+    margin: 0;
+}
+
+.custom-checkbox:checked {
+    background: #FF6F9C;
+    border: 0.05vw solid #FFA1C3;
+}
+
+.border-gradient-pink {
+    border-width: 0.05vw;
+    border-style: solid;
+    border-color: #C34F73ff;
+}
+
+.border-nxt {
+    border-width: 0.05vw;
+    border-style: solid;
+    border-color: transparent;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
