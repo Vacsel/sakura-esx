@@ -6,7 +6,7 @@ Config.Duty = {
     {
         Onduty = 'police',
         Offduty = 'unemployed',
-        Position = vector3(453.3347, -996.4365, 31.1393),
+        Position = vector3(448.3306, -967.7369, 30.1393),
         Marker = {
             Id = 27,
         },
