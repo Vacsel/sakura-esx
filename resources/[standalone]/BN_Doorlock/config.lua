@@ -190,38 +190,73 @@ Config.DoorList = {
 
 	-- vacsel config
 	-- ambulance1
-	{	
-		authorizedJobs = {'ambulance', 'admin'},
+	-- {	
+	-- 	authorizedJobs = {'ambulance', 'admin'},
+	-- 	locked = true,
+	-- 	boom = false, -- ตั้งค่าว่ามี
+	-- 	countboom = 1,
+	-- 	countrepair = 1,
+	-- 	item = false,
+	-- 	itemname = 'club_key_senior',
+	-- 	distance = 2.0,
+	-- 	textCoords = vector3(1119.1839, -1558.3299, 35.4442),
+	-- 	doors = {
+	-- 		{objName = 165389302, objYaw = 80.0719, objCoords = vector3(1121.7657, -1558.3299, 35.4442)},
+	-- 		{objName = 165389302, objYaw = 99.00, objCoords = vector3(1119.1839, -1558.3299, 35.4442)}
+	--  	},
+	-- },
+
+	-- FILM
+	{
+		authorizedJobs = {'ambulance'},
 		locked = true,
-		boom = false, -- ตั้งค่าว่ามี
-		countboom = 1,
+		boom = true,
+		countboom = 2,
 		countrepair = 1,
 		item = false,
-		itemname = 'club_key_senior',
+		itemname = '',
 		distance = 2.0,
-		textCoords = vector3(1119.1839, -1558.3299, 35.4442),
+		textCoords = vector3(1136.1245, -1558.4703, 35.4188),
+
 		doors = {
-			{objName = 165389302, objYaw = 80.0719, objCoords = vector3(1121.7657, -1558.3299, 35.4442)},
-			{objName = 165389302, objYaw = 99.00, objCoords = vector3(1119.1839, -1558.3299, 35.4442)}
-	 	},
+				{objName = 1653893025,  objYaw = 0.0, objCoords = vector3(1137.5131835938,-1558.3187255859,35.444206237793) },
+				{objName = 1653893025,  objYaw = 180.00001525879, objCoords = vector3(1134.9313964844,-1558.3187255859,35.444206237793) },
+		}
+	},
+
+	{
+		authorizedJobs = {'ambulance'},
+		locked = true,
+		boom = true,
+		countboom = 2,
+		countrepair = 1,
+		item = false,
+		itemname = '',
+		distance = 2.0,
+		textCoords = vector3(1120.4716, -1558.1555, 35.4188),
+
+		doors = {
+				{objName = 1653893025,  objYaw = 0.0, objCoords = vector3(1121.7657470703, -1558.3299560547, 35.444206237793) },
+				{objName = 1653893025,  objYaw = 180.00001525879, objCoords = vector3(1119.1839599609, -1558.3299560547, 35.444206237793) },
+		}
 	},
 
 		-- ambulance2
-	{	
-		authorizedJobs = {'ambulance', 'admin'},
-		locked = true,
-		boom = false, -- ตั้งค่าว่ามี
-		countboom = 1,
-		countrepair = 1,
-		item = false,
-		itemname = 'club_key_senior',
-		distance = 2.0,
-		textCoords = vector3(1136.2565, -1558.4517, 35.4188),
-		doors = {
-			{objName = 165389302, objYaw = 80.3179, objCoords = vector3(1137.5131, -1558.3187, 35.4442)},
-			{objName = 165389302, objYaw = 99.3084, objCoords = vector3(1134.9313, -1558.3187, 35.4442)}
-	 	},
-	},
+	-- {	
+	-- 	authorizedJobs = {'ambulance', 'admin'},
+	-- 	locked = true,
+	-- 	boom = false, -- ตั้งค่าว่ามี
+	-- 	countboom = 1,
+	-- 	countrepair = 1,
+	-- 	item = false,
+	-- 	itemname = 'club_key_senior',
+	-- 	distance = 2.0,
+	-- 	textCoords = vector3(1136.2565, -1558.4517, 35.4188),
+	-- 	doors = {
+	-- 		{objName = 165389302, objYaw = 80.3179, objCoords = vector3(1137.5131, -1558.3187, 35.4442)},
+	-- 		{objName = 165389302, objYaw = 99.3084, objCoords = vector3(1134.9313, -1558.3187, 35.4442)}
+	--  	},
+	-- },
 
 	{	
 		authorizedJobs = {'ambulance', 'admin'},
